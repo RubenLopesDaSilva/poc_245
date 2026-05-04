@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "name": "POC 245",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib\\main.dart"
+        }
+    ]
+}
