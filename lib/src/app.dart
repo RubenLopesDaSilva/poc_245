@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       light: lightTheme,
       dark: darkTheme,
       builder: (light, dark) => MaterialApp.router(
-        title: 'Gestion Loups-Garous',
+        title: 'POC - 245',
         theme: light,
         darkTheme: dark,
         routerConfig: router,
