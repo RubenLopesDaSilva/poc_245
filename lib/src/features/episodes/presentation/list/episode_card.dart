@@ -23,7 +23,7 @@ class EpisodeCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: Sizes.p24),
       child: GestureDetector(
         onTap: () {
-          context.goNamed(RouteNames.episodes.name);
+          context.goNamed(RouteNames.episodeReader.name);
         },
         child: Container(
           width: double.infinity,
@@ -35,6 +35,11 @@ class EpisodeCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               StyledText(title, Sizes.p28, bold: true,),
+              StyledText(description, Sizes.p16),
+              StyledText(sortie, Sizes.p16),
+              StyledText('Genre : $genre', Sizes.p16),
+              StyledText('Rating : $rating/10', Sizes.p16),
+              StyledText('Acteurs : ${actors.join(', ')}', Sizes.p16),
             ],
           ),
         ),
