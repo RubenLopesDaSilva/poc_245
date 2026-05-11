@@ -13,14 +13,20 @@ final router = GoRouter(
       builder: (context, state) => const SeriesListScreen(),
       routes: [
         GoRoute(
-          path: 'episodes',
+          path: 'episodes/:serieId',
           name: RouteNames.episodes.name,
-          builder: (context, state) => EpisodesListScreen(),
+          builder: (context, state) {
+            final id = state.pathParameters['serieId']!;
+            return EpisodesListScreen(serieId: id);
+          },
           routes: [
             GoRoute(
-              path: 'episode_reader',
+              path: 'episode_reader/:episodeId',
               name: RouteNames.episodeReader.name,
-              builder: (context, state) => EpisodeReaderScreen(),
+              builder: (context, state) {
+                final id = state.pathParameters['episodeId']!;
+                return EpisodeReaderScreen(episodeId: id);
+              },
             ),
           ],
         ),

@@ -4,7 +4,9 @@ import 'package:poc_245/src/localization/string_hardcoded.dart';
 import 'package:poc_245/src/utils/styled_text.dart';
 
 class EpisodeReaderScreen extends StatefulWidget {
-  const EpisodeReaderScreen({super.key});
+  const EpisodeReaderScreen({required this.episodeId, super.key});
+
+  final String episodeId;
 
   @override
   State<EpisodeReaderScreen> createState() => _EpisodeReaderScreenState();
@@ -24,7 +26,11 @@ class _EpisodeReaderScreenState extends State<EpisodeReaderScreen> {
           padding: const EdgeInsets.symmetric(vertical: Sizes.p24),
           child: Column(
             children: [
-              StyledText('Épisode 1'.hardcoded, Sizes.p28, bold: true),
+              StyledText(
+                'Épisode ${widget.episodeId}'.hardcoded,
+                Sizes.p28,
+                bold: true,
+              ),
             ],
           ),
         ),
