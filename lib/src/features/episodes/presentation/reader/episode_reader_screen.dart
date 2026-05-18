@@ -1,20 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:poc_245/src/constant/app_sizes.dart';
+import 'package:poc_245/src/features/episodes/data/episodes_repository.dart';
+import 'package:poc_245/src/features/series/data/series_repository.dart';
 import 'package:poc_245/src/localization/string_hardcoded.dart';
+import 'package:poc_245/src/routing/app_router.dart';
 import 'package:poc_245/src/utils/styled_text.dart';
 
-class EpisodeReaderScreen extends StatefulWidget {
-  const EpisodeReaderScreen({required this.episodeId, super.key});
+class EpisodeReaderScreen extends ConsumerStatefulWidget {
+  const EpisodeReaderScreen({
+    required this.episodeId,
+    required this.serieId,
+    super.key,
+  });
 
   final String episodeId;
+  final String serieId;
 
   @override
-  State<EpisodeReaderScreen> createState() => _EpisodeReaderScreenState();
+  ConsumerState<EpisodeReaderScreen> createState() =>
+      _EpisodeReaderScreenState();
 }
 
-class _EpisodeReaderScreenState extends State<EpisodeReaderScreen> {
+class _EpisodeReaderScreenState extends ConsumerState<EpisodeReaderScreen> {
   @override
   Widget build(BuildContext context) {
+    final serie = ref
+        .read(seriesRepositoryProvider)
+        .getSerieById(widget.serieId);
+    final episode = ref
+        .read(episodesRepositoryProvider)
+        .getEpisodeById(widget.episodeId);
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -25,13 +42,7 @@ class _EpisodeReaderScreenState extends State<EpisodeReaderScreen> {
         title: Padding(
           padding: const EdgeInsets.symmetric(vertical: Sizes.p24),
           child: Column(
-            children: [
-              StyledText(
-                'Épisode ${widget.episodeId}'.hardcoded,
-                Sizes.p28,
-                bold: true,
-              ),
-            ],
+            children: [StyledText(episode.title, Sizes.p28, bold: true)],
           ),
         ),
         centerTitle: true,
@@ -54,7 +65,18 @@ class _EpisodeReaderScreenState extends State<EpisodeReaderScreen> {
                   color: Colors.white,
                   size: Sizes.p32,
                 ),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  final previousEpisode = ref
+                      .read(episodesRepositoryProvider)
+                      .getPreviousEpisode(serie, widget.episodeId);
+                  context.goNamed(
+                    RouteNames.episodeReader.name,
+                    pathParameters: {
+                      'episodeId': previousEpisode.id,
+                      'serieId': widget.serieId,
+                    },
+                  );
+                },
               ),
               gapW20,
               IconButton(
@@ -63,7 +85,18 @@ class _EpisodeReaderScreenState extends State<EpisodeReaderScreen> {
                   color: Colors.white,
                   size: Sizes.p32,
                 ),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  final nextEpidsode = ref
+                      .read(episodesRepositoryProvider)
+                      .getNextEpisode(serie, widget.episodeId);
+                  context.goNamed(
+                    RouteNames.episodeReader.name,
+                    pathParameters: {
+                      'episodeId': nextEpidsode.id,
+                      'serieId': widget.serieId,
+                    },
+                  );
+                },
               ),
             ],
           ),

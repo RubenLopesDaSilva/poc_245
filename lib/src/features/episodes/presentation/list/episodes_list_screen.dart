@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poc_245/src/constant/app_sizes.dart';
-import 'package:poc_245/src/features/episodes/model/episode.dart';
+import 'package:poc_245/src/features/episodes/data/episodes_repository.dart';
 import 'package:poc_245/src/features/episodes/presentation/list/episode_card.dart';
 import 'package:poc_245/src/features/series/data/series_repository.dart';
 import 'package:poc_245/src/utils/styled_text.dart';
@@ -48,45 +48,86 @@ class _EpisodesListScreenState extends ConsumerState<EpisodesListScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(Sizes.p12),
-            child: StyledText('2 épisodes', Sizes.p20),
-          ),
-          Column(
+      body: Consumer(
+        builder: (context, ref, child) {
+          final repository = ref.watch(episodesRepositoryProvider);
+          final episodes = repository.getEpisodesByEpisodesIds(serie.episodes);
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              EpisodeCard(
-                seriesId: widget.serieId,
-                episode: Episode(
-                  id: '1',
-                  title: 'Episode 1',
-                  description: 'Description de l\'épisode 1',
-                  sortie: '01.01.2022',
-                  genre: 'Action',
-                  rating: 8,
-                  actors: ['Actor 1', 'Actor 2'],
+              Padding(
+                padding: const EdgeInsets.all(Sizes.p12),
+                child: StyledText('${episodes.length} épisodes', Sizes.p20),
+              ),
+              Expanded(
+                child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    final episode = episodes[index];
+                    return EpisodeCard(
+                      episode: episode,
+                      seriesId: widget.serieId,
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: Sizes.p12);
+                  },
+                  shrinkWrap: true,
+                  itemCount: episodes.length,
                 ),
               ),
-              gapH12,
-              EpisodeCard(
-                seriesId: widget.serieId,
-                episode: Episode(
-                  id: '2',
-                  title: 'Episode 2',
-                  description: 'Description de l\'épisode 2',
-                  sortie: '01.02.2022',
-                  genre: 'Action',
-                  rating: 7,
-                  actors: ['Actor 3', 'Actor 4'],
-                ),
-              ),
+              // Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     ListView.separated(
+              //       itemBuilder: (context, index) {
+              //         final episode = episodes[index];
+              //         return EpisodeCard(
+              //           episode: episode,
+              //           seriesId: widget.serieId,
+              //         );
+              //       },
+              //       separatorBuilder: (context, index) {
+              //         return SizedBox(height: Sizes.p12);
+              //       },
+              //       shrinkWrap: true,
+              //       itemCount: episodes.length,
+              //     ),
+              //   ],
+              // ),
+              // Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     EpisodeCard(
+              //       seriesId: widget.serieId,
+              //       episode: Episode(
+              //         id: '1',
+              //         title: 'Episode 1',
+              //         description: 'Description de l\'épisode 1',
+              //         sortie: '01.01.2022',
+              //         genre: 'Action',
+              //         rating: 8,
+              //         actors: ['Actor 1', 'Actor 2'],
+              //       ),
+              //     ),
+              //     gapH12,
+              //     EpisodeCard(
+              //       seriesId: widget.serieId,
+              //       episode: Episode(
+              //         id: '2',
+              //         title: 'Episode 2',
+              //         description: 'Description de l\'épisode 2',
+              //         sortie: '01.02.2022',
+              //         genre: 'Action',
+              //         rating: 7,
+              //         actors: ['Actor 3', 'Actor 4'],
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }

@@ -25,7 +25,8 @@ final router = GoRouter(
               name: RouteNames.episodeReader.name,
               builder: (context, state) {
                 final id = state.pathParameters['episodeId']!;
-                return EpisodeReaderScreen(episodeId: id);
+                final serieId = state.pathParameters['serieId']!;
+                return EpisodeReaderScreen(episodeId: id, serieId: serieId);
               },
             ),
           ],
