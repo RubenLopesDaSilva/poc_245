@@ -32,17 +32,17 @@ final seriesRepositoryProvider = Provider<SeriesRepository>((ref) {
   return SeriesRepository();
 });
 
-class SeriesListNotifier extends Notifier<List<Serie>> {
-  final SeriesRepository repository;
+// class SeriesListNotifier extends Notifier<List<Serie>> {
+//   final SeriesRepository repository;
 
-  SeriesListNotifier(this.repository);
+//   SeriesListNotifier(this.repository);
 
-  @override
-  List<Serie> build() {
-    return repository.getSeries();
-  }
+//   @override
+//   List<Serie> build() {
+//     return repository.getSeries();
+//   }
 
-  Serie getSerieById(String id) {
-    return repository.getSerieById(id);
-  }
-}
+//   Serie getSerieById(String id) {
+//     return repository.getSerieById(id);
+//   }
+// }

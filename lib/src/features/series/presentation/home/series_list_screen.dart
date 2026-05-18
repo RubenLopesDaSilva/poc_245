@@ -32,36 +32,38 @@ class _SeriesListScreenState extends State<SeriesListScreen> {
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(Sizes.p12),
-            child: StyledText('3 séries', Sizes.p20),
-          ),
-          Column(
+      body: Consumer(
+        builder: (context, ref, child) {
+          final repository = ref.watch(seriesRepositoryProvider);
+          final series = repository.getSeries();
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    final repository = ref.watch(seriesRepositoryProvider);
-                    final series = repository.getSeries();
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        final serie = series[index];
-                        return SerieCard(serie: serie);
-                      },
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                    );
-                  },
-                ),
+              Padding(
+                padding: const EdgeInsets.all(Sizes.p12),
+                child: StyledText('${series.length} séries', Sizes.p20),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListView.separated(
+                    itemBuilder: (context, index) {
+                      final serie = series[index];
+                      return SerieCard(serie: serie);
+                    },
+                    separatorBuilder: (context, index) {
+                      return SizedBox(height: Sizes.p12);
+                    },
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: series.length,
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }

@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poc_245/src/constant/app_sizes.dart';
 import 'package:poc_245/src/features/episodes/model/episode.dart';
 import 'package:poc_245/src/features/episodes/presentation/list/episode_card.dart';
-import 'package:poc_245/src/localization/string_hardcoded.dart';
+import 'package:poc_245/src/features/series/data/series_repository.dart';
 import 'package:poc_245/src/utils/styled_text.dart';
 
-class EpisodesListScreen extends StatefulWidget {
+class EpisodesListScreen extends ConsumerStatefulWidget {
   const EpisodesListScreen({required this.serieId, super.key});
 
   final String serieId;
 
   @override
-  State<EpisodesListScreen> createState() => _EpisodesListScreenState();
+  ConsumerState<EpisodesListScreen> createState() => _EpisodesListScreenState();
 }
 
-class _EpisodesListScreenState extends State<EpisodesListScreen> {
+class _EpisodesListScreenState extends ConsumerState<EpisodesListScreen> {
   @override
   Widget build(BuildContext context) {
+    final serie = ref
+        .read(seriesRepositoryProvider)
+        .getSerieById(widget.serieId);
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -29,7 +33,8 @@ class _EpisodesListScreenState extends State<EpisodesListScreen> {
           child: Column(
             children: [
               StyledText(
-                'Series ${widget.serieId}'.hardcoded,
+                // 'Series ${widget.serieId}'.hardcoded,
+                serie.title,
                 Sizes.p28,
                 bold: true,
               ),
