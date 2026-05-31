@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:poc_245/src/constant/app_sizes.dart';
 import 'package:poc_245/src/features/episodes/data/episodes_repository.dart';
 import 'package:poc_245/src/features/series/data/series_repository.dart';
-import 'package:poc_245/src/localization/string_hardcoded.dart';
 import 'package:poc_245/src/routing/app_router.dart';
 import 'package:poc_245/src/utils/styled_text.dart';
 
@@ -12,11 +13,13 @@ class EpisodeReaderScreen extends ConsumerStatefulWidget {
   const EpisodeReaderScreen({
     required this.episodeId,
     required this.serieId,
+    required this.videoUrl,
     super.key,
   });
 
   final String episodeId;
   final String serieId;
+  final String videoUrl;
 
   @override
   ConsumerState<EpisodeReaderScreen> createState() =>
@@ -24,6 +27,22 @@ class EpisodeReaderScreen extends ConsumerStatefulWidget {
 }
 
 class _EpisodeReaderScreenState extends ConsumerState<EpisodeReaderScreen> {
+  late final Player player = Player();
+
+  late final VideoController controller = VideoController(player);
+
+  @override
+  void initState() {
+    player.open(Media(widget.videoUrl));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final serie = ref
@@ -107,7 +126,10 @@ class _EpisodeReaderScreenState extends ConsumerState<EpisodeReaderScreen> {
               height: 750,
               color: colors.secondary,
               child: Center(
-                child: StyledText('Contenu de l\'épisode'.hardcoded, Sizes.p20),
+                child: Video(
+                  controller: controller,
+                  controls: AdaptiveVideoControls,
+                ),
               ),
             ),
           ),
