@@ -26,7 +26,12 @@ final router = GoRouter(
               builder: (context, state) {
                 final id = state.pathParameters['episodeId']!;
                 final serieId = state.pathParameters['serieId']!;
-                return EpisodeReaderScreen(episodeId: id, serieId: serieId);
+                final data = state.extra as Map<String, String>;
+                return EpisodeReaderScreen(
+                  episodeId: id,
+                  serieId: serieId,
+                  videoUrl: data['videoUrl']!,
+                );
               },
             ),
           ],

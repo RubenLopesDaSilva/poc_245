@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poc_245/src/constant/app_sizes.dart';
 import 'package:poc_245/src/features/series/model/serie.dart';
+import 'package:poc_245/src/features/torrents/data/torrent_repository.dart';
 import 'package:poc_245/src/routing/app_router.dart';
 import 'package:poc_245/src/utils/styled_text.dart';
 
@@ -13,14 +14,22 @@ class SerieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Sizes.p24),
       child: GestureDetector(
-        onTap: () {
-          context.goNamed(
-            RouteNames.episodes.name,
-            pathParameters: {'serieId': serie.id},
+        onTap: () async {
+          final torrentRepo = TorrentRepository();
+          String localSteamUrl = await torrentRepo.startStream(
+            "Download.mp4.torrent",
           );
+          if (context.mounted) {
+            context.goNamed(
+              RouteNames.episodes.name,
+              pathParameters: {'serieId': serie.id},
+              extra: {'videoUrl': localSteamUrl},
+            );
+          }
         },
         child: Container(
           width: double.infinity,
